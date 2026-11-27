@@ -1,8 +1,9 @@
 // LIVE MAINNET ACCEPTANCE (spec 11.1). Run by the project owner with their own funded key(s); keys are read from the environment only.
 //   STATEMENT_REGISTRY_ADDRESS=0x... DEPLOYER_PRIVATE_KEY=0x... ACCEPT_SECOND_PRIVATE_KEY=0x... \
-//   ACCEPT_FIRST_DAY=2026-11-01 ACCEPT_LAST_DAY=2026-11-14 NODE_USE_ENV_PROXY=1 npx tsx scripts/mainnet-acceptance.mts
+//   ACCEPT_FIRST_DAY=2026-11-01 ACCEPT_LAST_DAY=2026-11-14 (or ACCEPT_START_UNIX/ACCEPT_END_UNIX) NODE_USE_ENV_PROXY=1 npx tsx scripts/mainnet-acceptance.mts
 // DEPLOYER_PRIVATE_KEY is the wallet being reported on (its own QUSDC history). The second key plays the forger / unauthorised party.
-import { JsonRpcProvider, Wallet } from "ethers";
+import { Wallet } from "ethers";
+import { FetchProvider } from "./lib/proxy-provider.mts";
 import fs from "node:fs";
 import {
   ChainReader, JsonRpcClient, createRequest, inclusiveDaysToPeriod, requestLink, resolveReference, prepareIssuance, confirmRegistration, verifyStatement,
@@ -14,7 +15,7 @@ const REGISTRY = need("STATEMENT_REGISTRY_ADDRESS").toLowerCase();
 const owner = new Wallet(need("DEPLOYER_PRIVATE_KEY"));
 const second = process.env.ACCEPT_SECOND_PRIVATE_KEY ? new Wallet(process.env.ACCEPT_SECOND_PRIVATE_KEY) : null;
 const RPC_A = process.env.QIE_RPC_A ?? "https://rpc1mainnet.qie.digital", RPC_B = process.env.QIE_RPC_B ?? "https://rpc5mainnet.qie.digital";
-const provider = new JsonRpcProvider(RPC_A, 1990, { staticNetwork: true, cacheTimeout: -1 /* ethers caches identical calls for 250 ms: that returned stale nonces */ });
+const provider = new FetchProvider(RPC_A); // fetch-based (proxy-capable); cacheTimeout -1 because ethers caches identical calls for 250 ms and returned stale nonces
 const mk = (id: string, url: string) => new ChainReader(new JsonRpcClient({ id, url }, { timeoutMs: 40000, retries: 3, backoffMs: 800 }), REGISTRY);
 const dual: Dual = { a: mk("rpc1", RPC_A), b: mk("rpc5", RPC_B) };
 const profiles = loadProfiles(PROFILE_MANIFESTS); const profile = [...profiles.values()].at(-1)!;
@@ -31,11 +32,15 @@ async function send(w: Wallet, data: string) {
 }
 async function expectRevert(w: Wallet, data: string) { try { await w.connect(provider).estimateGas({ to: REGISTRY, data }); return false; } catch { return true; } }
 
-const { startUnix, endUnix } = inclusiveDaysToPeriod(need("ACCEPT_FIRST_DAY"), need("ACCEPT_LAST_DAY"));
+// Either whole UTC days (ACCEPT_FIRST_DAY/ACCEPT_LAST_DAY) or an exact completed range in Unix seconds (ACCEPT_START_UNIX/ACCEPT_END_UNIX).
+const { startUnix, endUnix } = process.env.ACCEPT_START_UNIX && process.env.ACCEPT_END_UNIX
+  ? { startUnix: BigInt(process.env.ACCEPT_START_UNIX), endUnix: BigInt(process.env.ACCEPT_END_UNIX) }
+  : inclusiveDaysToPeriod(need("ACCEPT_FIRST_DAY"), need("ACCEPT_LAST_DAY"));
 if (endUnix - startUnix > MAX_PERIOD_SECONDS) throw new Error("period too long");
 const ref0 = await resolveReference(dual);
 const req = createRequest({ registry: REGISTRY, expectedWallet: owner.address, startUnix, endUnix, nowUnix: ref0.timestamp });
-const link = requestLink("https://bankable.invalid", "/verify", req);
+const ORIGIN = JSON.parse(profile.manifestText).origin;
+const link = requestLink(ORIGIN, "/verify", req);
 console.log(`owner ${owner.address}; period ${startUnix}..${endUnix}; registry ${REGISTRY}`);
 
 const issue1: Issuance = await prepareIssuance({ dual, request: req, registry: REGISTRY, profile, scan: { concurrency: 6, onProgress: (d, t) => d === t && console.log(`scan ${d}/${t}`) } });
@@ -49,7 +54,7 @@ let v = await verify(issue1.pdf, owner.address, link); log("authentic PDF + orig
 v = await verify(issue1.pdf, owner.address); log("authentic PDF, no link => Verified document, request not checked", v.overall === "verified-request-not-checked", v.checks);
 const altered = Uint8Array.from(issue1.pdf); altered[altered.length - 40] ^= 1;
 v = await verify(altered, owner.address, link); log("one byte altered (unregistered) => Issued fails", v.checks.issued.status === "fail" && v.overall === "failed", v.checks);
-v = await verify(issue1.pdf, owner.address, requestLink("https://bankable.invalid", "/verify", { ...req, nonce: "0x" + "77".repeat(32) })); log("wrong request link => Request fails", v.checks.request.status === "fail" && v.overall === "failed", v.checks);
+v = await verify(issue1.pdf, owner.address, requestLink(ORIGIN, "/verify", { ...req, nonce: "0x" + "77".repeat(32) })); log("wrong request link => Request fails", v.checks.request.status === "fail" && v.overall === "failed", v.checks);
 v = await verify(undefined, owner.address); log("QR only => Not checked, never Verified", v.overall === "not-checked-qr-only", v.overall);
 log("duplicate registration of the same file reverts", await expectRevert(owner, registryInterface.encodeFunctionData("register", Object.values(issue1.args) as any)), null);
 

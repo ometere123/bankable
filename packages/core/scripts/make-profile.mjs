@@ -8,7 +8,7 @@ import { fileURLToPath } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const repo = path.resolve(root, "../..");
-const origin = (process.env.BANKABLE_ORIGIN || "https://bankable.invalid").replace(/\/$/, "");
+const origin = (process.env.BANKABLE_ORIGIN || "https://bankable-qie.vercel.app").replace(/\/$/, "");
 const sha = (b) => "0x" + crypto.createHash("sha256").update(b).digest("hex");
 
 const SOURCES = ["src/render/pdf.ts", "src/render/format.ts", "src/render/qr.ts", "src/canonical.ts", "src/ledger.ts"];

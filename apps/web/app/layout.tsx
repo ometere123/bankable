@@ -1,4 +1,9 @@
 import type { Metadata } from "next";
+import "@fontsource/instrument-serif/latin-400.css";
+import "@fontsource/instrument-serif/latin-400-italic.css";
+import "@fontsource/inter/latin-400.css";
+import "@fontsource/inter/latin-500.css";
+import "@fontsource/inter/latin-600.css";
 import "./globals.css";
 import { RPC_A, RPC_B } from "../lib/config";
 
@@ -18,11 +23,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <a className="skip" href="#content">Skip to content</a>
         <main id="content">
           <header className="top">
-            <a className="brand" href="/">BANKABLE</a>
-            <nav aria-label="Primary"><a href="/request">Create request</a><a href="/new">Issue</a><a href="/verify">Verify</a></nav>
+            <a className="brand" href="/">Bankable</a>
+            <nav aria-label="Primary"><a href="/request">Create request<sup>01</sup></a><a href="/new">Issue<sup>02</sup></a><a href="/verify">Verify<sup>03</sup></a></nav>
           </header>
           {children}
-          <footer className="foot">Evidence derived from public chain data. Not a certified bank statement. QIE mainnet (chain 1990), QUSDC only.</footer>
+          <footer className="foot"><span>Evidence derived from public chain data. Not a certified bank statement.</span><span>QIE mainnet · chain 1990 · QUSDC only</span></footer>
         </main>
       </body>
     </html>

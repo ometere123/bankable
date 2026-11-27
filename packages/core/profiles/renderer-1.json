@@ -1,6 +1,6 @@
 {
   "profile": "bankable-renderer/1",
-  "origin": "https://bankable.invalid",
+  "origin": "https://bankable-qie.vercel.app",
   "template": {
     "files": {
       "src/render/pdf.ts": "0x618a6220acb88d510d08f7c896ecb63fb7ec3c22f3b3e937133e71ec0bf87a4f",

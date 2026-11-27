@@ -1,0 +1,281 @@
+{
+  "network": "QIE mainnet (1990)",
+  "registry": "0x1e9fc096bebe1f142aeed317d0054583e9227804",
+  "owner": "0x264d758f555793F54B14E02567CD6F6aE004c436",
+  "secondWallet": "0xD2612D30646BafB05fa28B8363e8F2AaDD54e0c4",
+  "startUnix": "1795755600",
+  "endUnix": "1795759800",
+  "results": [
+    {
+      "name": "register authentic statement",
+      "ok": true,
+      "detail": {
+        "tx": "0x466069c9c31f0d5695c88778c72eff1e5fd16ef348c4a9238736bc3d24c44d12"
+      }
+    },
+    {
+      "name": "read-back matches every submitted field on both endpoints",
+      "ok": true,
+      "detail": {
+        "id": "0xb7090d3a9d0e1c49ee3f28a1f4295f8b7f0c1b031457a10e261d72ac9cc4892b",
+        "block": "12203779"
+      }
+    },
+    {
+      "name": "authentic PDF + original link => Verified, request matched",
+      "ok": true,
+      "detail": {
+        "issued": {
+          "status": "pass",
+          "reasons": [
+            "registered by 0x264d758f555793f54b14e02567cd6f6ae004c436 at block 12203779"
+          ]
+        },
+        "content": {
+          "status": "pass",
+          "reasons": [
+            "byte-identical to the canonical rendering of chain-derived data",
+            "dataHash 0xf7712c70b8374d2f63818e91ed76cf11d0902cf37ea83e7217f285ca7445c8ab"
+          ]
+        },
+        "status": {
+          "status": "pass",
+          "reasons": [
+            "not revoked as of block 12203780"
+          ]
+        },
+        "request": {
+          "status": "pass",
+          "reasons": [
+            "request link reproduces the record's request id; wallet, token, chain, registry and dates match"
+          ]
+        }
+      }
+    },
+    {
+      "name": "authentic PDF, no link => Verified document, request not checked",
+      "ok": true,
+      "detail": {
+        "issued": {
+          "status": "pass",
+          "reasons": [
+            "registered by 0x264d758f555793f54b14e02567cd6f6ae004c436 at block 12203779"
+          ]
+        },
+        "content": {
+          "status": "pass",
+          "reasons": [
+            "byte-identical to the canonical rendering of chain-derived data",
+            "dataHash 0xf7712c70b8374d2f63818e91ed76cf11d0902cf37ea83e7217f285ca7445c8ab"
+          ]
+        },
+        "status": {
+          "status": "pass",
+          "reasons": [
+            "not revoked as of block 12203784"
+          ]
+        },
+        "request": {
+          "status": "not-checked",
+          "reasons": [
+            "no request link supplied"
+          ]
+        }
+      }
+    },
+    {
+      "name": "one byte altered (unregistered) => Issued fails",
+      "ok": true,
+      "detail": {
+        "issued": {
+          "status": "fail",
+          "reasons": [
+            "no registry record exists for this owner and file hash (never registered by this owner, or the file was altered)"
+          ]
+        },
+        "content": {
+          "status": "not-checked",
+          "reasons": [
+            "no record to rebuild from"
+          ]
+        },
+        "status": {
+          "status": "not-checked",
+          "reasons": [
+            "no record"
+          ]
+        },
+        "request": {
+          "status": "not-checked",
+          "reasons": [
+            "no record to compare against"
+          ]
+        }
+      }
+    },
+    {
+      "name": "wrong request link => Request fails",
+      "ok": true,
+      "detail": {
+        "issued": {
+          "status": "pass",
+          "reasons": [
+            "registered by 0x264d758f555793f54b14e02567cd6f6ae004c436 at block 12203779"
+          ]
+        },
+        "content": {
+          "status": "pass",
+          "reasons": [
+            "byte-identical to the canonical rendering of chain-derived data",
+            "dataHash 0xf7712c70b8374d2f63818e91ed76cf11d0902cf37ea83e7217f285ca7445c8ab"
+          ]
+        },
+        "status": {
+          "status": "pass",
+          "reasons": [
+            "not revoked as of block 12203788"
+          ]
+        },
+        "request": {
+          "status": "fail",
+          "reasons": [
+            "link does not reproduce the record's request id"
+          ]
+        }
+      }
+    },
+    {
+      "name": "QR only => Not checked, never Verified",
+      "ok": true,
+      "detail": "not-checked-qr-only"
+    },
+    {
+      "name": "duplicate registration of the same file reverts",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "forged PDF registered by a second wallet => Issued passes, Content fails",
+      "ok": true,
+      "detail": {
+        "issued": {
+          "status": "pass",
+          "reasons": [
+            "registered by 0xd2612d30646bafb05fa28b8363e8f2aadd54e0c4 at block 12203806"
+          ]
+        },
+        "content": {
+          "status": "fail",
+          "reasons": [
+            "the registered data commitment differs from the canonical data rebuilt from chain",
+            "the file is not byte-identical to the canonical rendering of the chain data"
+          ]
+        },
+        "status": {
+          "status": "pass",
+          "reasons": [
+            "not revoked as of block 12203806"
+          ]
+        },
+        "request": {
+          "status": "not-checked",
+          "reasons": [
+            "no request link supplied"
+          ]
+        }
+      }
+    },
+    {
+      "name": "same forged PDF as the expected owner => Issued fails",
+      "ok": true,
+      "detail": {
+        "issued": {
+          "status": "fail",
+          "reasons": [
+            "no registry record exists for this owner and file hash (never registered by this owner, or the file was altered)"
+          ]
+        },
+        "content": {
+          "status": "not-checked",
+          "reasons": [
+            "no record to rebuild from"
+          ]
+        },
+        "status": {
+          "status": "not-checked",
+          "reasons": [
+            "no record"
+          ]
+        },
+        "request": {
+          "status": "not-checked",
+          "reasons": [
+            "no request link supplied"
+          ]
+        }
+      }
+    },
+    {
+      "name": "third-party registration of the owner's file hash cannot take over the original",
+      "ok": true,
+      "detail": {
+        "tx": "0x4092b6f07e033cf68ed5528a6a4524b6f9579697de68f571b5c6202606c22a00"
+      }
+    },
+    {
+      "name": "unauthorised revoke reverts",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "owner revokes",
+      "ok": true,
+      "detail": {
+        "tx": "0x80249d0773035a3b6c9a804e436226ea58d43089189cfd2344e49362bfa4749f"
+      }
+    },
+    {
+      "name": "revoked: old file fails Status",
+      "ok": true,
+      "detail": {
+        "issued": {
+          "status": "pass",
+          "reasons": [
+            "registered by 0x264d758f555793f54b14e02567cd6f6ae004c436 at block 12203779"
+          ]
+        },
+        "content": {
+          "status": "pass",
+          "reasons": [
+            "byte-identical to the canonical rendering of chain-derived data",
+            "dataHash 0xf7712c70b8374d2f63818e91ed76cf11d0902cf37ea83e7217f285ca7445c8ab"
+          ]
+        },
+        "status": {
+          "status": "fail",
+          "reasons": [
+            "revoked at block 12203830"
+          ]
+        },
+        "request": {
+          "status": "pass",
+          "reasons": [
+            "request link reproduces the record's request id; wallet, token, chain, registry and dates match"
+          ]
+        }
+      }
+    },
+    {
+      "name": "double revoke reverts",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "reissue with a fresh salt => new record matches the ORIGINAL link",
+      "ok": true,
+      "detail": {
+        "tx": "0xeb911021213f3a2d809c6b6a675f88dddefc5c51860eac9cbab271b9611ca031"
+      }
+    }
+  ]
+}

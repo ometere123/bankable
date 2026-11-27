@@ -4,7 +4,7 @@ Authoritative spec: *Bankable Master Build Specification v1.0* (27 Nov 2026). Th
 (project initialisation and core implementation). **Nothing is marked passed unless it was executed.** Fixture-based results are
 labelled as such and are never presented as mainnet evidence.
 
-Last updated: 2026-11-27, end of Phase 1.
+Last updated: 2026-11-27 (registry deployed, mainnet acceptance 16/16, interface restyled from the Framer design system).
 
 ## 1. Current status
 
@@ -13,10 +13,10 @@ Last updated: 2026-11-27, end of Phase 1.
 | G0 Capacity | Not mine to run (owner decision) |
 | G1 Ledger | **PASS** on real QIE mainnet, with measured corrections to spec assumptions (section 3) |
 | G2 Renderer | **PASS** across Node, Chromium and Firefox, after fixing a real cross-engine defect the gate found |
-| G3 Mainnet and wallet | **PARTIAL**. Real-EVM execution verified without funds. **Funded deployment, a real QIE Wallet, and explorer source verification of the registry are not done** (blocked on the project owner) |
-| Tier 1 (request, issue, verify, registry, adversarial suite) | Implemented. Acceptance suite passes on a fixture chain, in real browsers, and on a local real-EVM chain. **Not yet run on mainnet** |
+| G3 Mainnet and wallet | **PASS except the real QIE Wallet extension**: funded deployment, receipt, read-back, and explorer source verification (full match) are done on mainnet. A real QIE Wallet has not been used; only a mock |
+| Tier 1 (request, issue, verify, registry, adversarial suite) | Implemented. **Live mainnet acceptance 16/16** (`docs/acceptance/mainnet-2026-11-27.json`), plus fixture chain, real browsers and a local real-EVM run |
 | Tier 2 (CSV, CLI, QIE ID, explorer status, metadata locator) | Implemented and tested; live QIE ID and explorer paths verified against the real services |
-| Registry deployed on mainnet | **Yes** (address in section 10). Live mainnet acceptance still pending: it needs a completed UTC day and the final domain |
+| Registry deployed on mainnet | **Yes**, source-verified on the explorer (full match). Public address locked: `https://bankable-qie.vercel.app` (Vercel project created, nothing deployed yet) |
 
 ## 2. Repository layout and toolchain
 
@@ -74,7 +74,7 @@ whose last bit differs between V8 versions. Fix: a counter replaces `context.add
 clock and timezone; the `Math.sin` test was mutation-checked (fails without the fix). `updateMetadata:false` plus fixed dates leaves no `/ID` and no XMP.
 Browsers also regenerate the exact same bytes during verification (E2E, section 7).
 
-### G3 Mainnet and wallet: PARTIAL
+### G3 Mainnet and wallet: PASS except the real wallet extension
 Verified **without funds** by executing on QIE mainnet's real EVM (`eth_call`, no transaction; `g3-evm-probe.json`):
 - Geth-family node, EIP-1559 (base fee 1 gwei), block gas limit 4,294,967,295.
 - **PUSH0 is supported**. The registry is compiled for `paris` as specified.
@@ -83,7 +83,9 @@ Verified **without funds** by executing on QIE mainnet's real EVM (`eth_call`, n
 - A probe contract run inside one `eth_call` registers, reads back, revokes and exercises every revert path on the real EVM: **13 of 13 observations true**.
 - The node **ignores `eth_call` state overrides**, which was not relied on. (An early probe that assumed support was discarded.)
 
-**Not done:** funded mainnet deployment; receipt and read-back with a real wallet; QIE Wallet (`me.qiewallet`) chain-switch and transaction behaviour; explorer source
+**Done on mainnet (2026-11-27):** registry deployed at `0x1E9FC096bebe1f142AeeD317d0054583E9227804` (block 12203114, tx `0xb5251402c6b971633a510b8a36d47fc86a6a570ab68b2f70e5e65fd083e1bd0a`); on-chain runtime bytecode byte-identical to the local build; source submitted to the explorer's standard-JSON verification and reported **fully verified**; receipt and read-back through `confirmRegistration`; the complete spec 11.1 matrix **16/16** (`docs/acceptance/mainnet-2026-11-27.json`), including forged, third-party, revoked and reissued cases with real transactions. Total gas for deployment, three transfers and the acceptance run was about 0.002 QIE. The acceptance used the period 05:00 to 06:10 UTC (ledger: 4 entries, opening 0, closing 0.75 QUSDC), a completed range, because the core accepts any completed range (only the request form is whole-day).
+
+**Not done:** QIE Wallet (`me.qiewallet`) chain-switch and transaction behaviour with the real extension; (earlier probe notes follow) explorer source
 verification of the registry (the explorer is Blockscout v7.0.2 with an open API, so status reading is implemented; the submission flow is untested until deployment).
 `rpc1testnet.qie.digital` reset connections from this environment, so no testnet run was possible.
 
@@ -113,7 +115,7 @@ verification of the registry (the explorer is Blockscout v7.0.2 with an open API
 | Entry cap unspecified | 5,000 would exceed the 2 MiB file cap | 2,000 |
 | Hardhat `paris` | named `merge` in Hardhat 2.30 | In-process test network uses `merge` (no PUSH0) |
 | Hardhat downloads solc | downloader ignores the egress proxy | solc 0.8.20 fetched with `curl` from `binaries.soliditylang.org`, sha256 matched the official list, placed in Hardhat's cache (sandbox workaround only) |
-| Registry address "decided at deploy" | not deployed | Local fixture registry used for the end-to-end runs (labelled) |
+| `bankable.vercel.app` as the public address | already owned by another Vercel team (409) | `bankable-qie.vercel.app` attached to the project and verified; baked into the renderer profile |
 | Tier 2 "accounting-import test" | no Xero or QuickBooks access | Real import into **LibreOffice** with exact-sum reconciliation (`tier2-import-test.json`). **No Xero/QuickBooks compatibility is claimed** |
 | Wallet MCP "via a server route if browsers cannot reach it" | `mcp.qie.digital/mcp` answers CORS `*` with the MCP headers | Called directly from the browser; no server route |
 
@@ -139,14 +141,14 @@ Real QIE Wallet behaviour, real gas estimation by that wallet, and mainnet regis
 
 ## 8. Outstanding tasks and blockers
 
-**Needs the project owner (blocking mainnet evidence)**
-1. **Decide the stable hosting domain** (`BANKABLE_ORIGIN`). It is inside the renderer profile, so changing it changes `rendererId`. The placeholder `https://bankable.invalid` is used now; regenerate the profile and every fixture after the decision.
-2. **Fund a deployer and deploy** (`cd contracts && DEPLOYER_PRIVATE_KEY=... pnpm deploy:mainnet`; the key stays in your shell). Cost is far below 0.001 QIE. Then set `NEXT_PUBLIC_REGISTRY_ADDRESS`, rebuild, run `scripts/mainnet-acceptance.mts` (needs a wallet with real QUSDC history and an optional second funded key for the forged/unauthorised cases) and commit the transcript.
-3. Submit the registry source to the explorer (`pnpm export:verify-input`) and confirm the status line on `/verify` reads "verified".
-5. Non-blocking: one genuine finance recipient (not done).
+**Needs the project owner**
+1. Try one issuance with your own QIE Wallet extension on the deployed site (everything so far used keys directly or a mock wallet).
+2. Approve deploying the app to Vercel. Before it goes public, Vercel Authentication on the `bankable` project must be switched off (it is on by default and would put a login in front of the verifier and the QR links), and `NEXT_PUBLIC_REGISTRY_ADDRESS=0x1E9FC096bebe1f142AeeD317d0054583E9227804` set for the build.
+3. When we are done: give me the address for the leftover funds (the two generated wallets hold 0.75 and 0.25 QUSDC and about 1 QIE each).
+4. Non-blocking: one genuine finance recipient (not done).
 
 **Known limits and risks**
-- Mainnet registration with the real QIE Wallet is untested; gas is left to the wallet's estimation.
+- Registration through the real QIE Wallet extension is untested; gas is left to the wallet's estimation. The mainnet acceptance signed with local keys.
 - The 31-day cap takes about 2.3 minutes, above the two-minute target.
 - Agreement of two endpoints plus reconciliation does not prove completeness; they may share infrastructure (spec 6.4). rpc1 and rpc5 appear to be QIE-operated.
 - `VAULT_ROLE` can mint and burn arbitrarily; statements record those events faithfully but the token's admin power is outside Bankable's scope.
@@ -174,3 +176,8 @@ In this sandbox only: Node's `fetch` needs `NODE_USE_ENV_PROXY=1`; Hardhat canno
 | StatementRegistry (QIE mainnet) | `0x1E9FC096bebe1f142AeeD317d0054583E9227804`, deployed at block 12203114, tx `0xb5251402c6b971633a510b8a36d47fc86a6a570ab68b2f70e5e65fd083e1bd0a`; on-chain bytecode verified byte-identical to the local build (see `contracts/deployments/mainnet.json`) |
 | Local build | solc 0.8.20+commit.a1b79de6, evm paris, optimizer 200 runs, runtime 2,147 bytes, runtime keccak256 `0x86877a3f2bfcf34e32cebea9cef8ec201c15a3e8a0dfcc5377d25ded89414183` |
 | Local fixture registry (NOT a real network) | `0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6` on a throwaway local chain-1990 node |
+| Explorer | `https://mainnet.qie.digital/address/0x1E9FC096bebe1f142AeeD317d0054583E9227804`: source verified, full match |
+| Renderer profile (current) | `bankable-renderer/1`, origin `https://bankable-qie.vercel.app`, rendererId `0x88501b7ead79174dfa554c54c664a28cb562f6477cc8ad8a0d437f668b9ac532` |
+| Public address | `https://bankable-qie.vercel.app` (Vercel project `bankable`, id `prj_u8B6f7vOGZIm7RYucODjoCF3uU5p`; Vercel Authentication still on; not deployed yet) |
+| Wallet A (owner and deployer; funded by you) | `0x264d758f555793F54B14E02567CD6F6aE004c436`: 0.75 QUSDC left |
+| Wallet B (second wallet) | `0xD2612D30646BafB05fa28B8363e8F2AaDD54e0c4`: 0.25 QUSDC left. Private keys are in a 0600 file outside the repository and are not committed |

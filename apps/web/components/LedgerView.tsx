@@ -5,7 +5,7 @@ import { totalsOf, type StatementData } from "@bankable/core";
 export function Summary({ d }: { d: StatementData }) {
   const t = totalsOf(d.entries);
   return (
-    <table>
+    <div className="tablewrap"><table>
       <tbody>
         <tr><th>Wallet</th><td className="mono"><a href={explorerAddress(d.owner)}>{d.owner}</a></td></tr>
         <tr><th>Period (UTC)</th><td>{new Date(Number(d.startUnix) * 1000).toISOString()} to {new Date(Number(d.endUnix) * 1000).toISOString()} (end exclusive)</td></tr>
@@ -17,13 +17,13 @@ export function Summary({ d }: { d: StatementData }) {
         <tr><th>Closing</th><td className="mono">{amountLabel(d.closing, d.decimals)} QUSDC</td></tr>
         <tr><th>Reconciliation</th><td className="mono">{amountLabel(d.opening, d.decimals)} + {amountLabel(t.incoming, d.decimals)} - {amountLabel(t.outgoing, d.decimals)} = {amountLabel(d.opening + t.incoming - t.outgoing, d.decimals)} {d.opening + t.incoming - t.outgoing === d.closing ? "= closing (matches pinned balance reads on both endpoints)" : "DOES NOT MATCH closing"}</td></tr>
       </tbody>
-    </table>
+    </table></div>
   );
 }
 export function Entries({ d }: { d: StatementData }) {
   if (d.entries.length === 0) return <p className="muted">No QUSDC transfers involved this wallet in the period.</p>;
   return (
-    <div style={{ overflowX: "auto" }}>
+    <div className="tablewrap">
       <table>
         <thead><tr><th>#</th><th>Dir</th><th>UTC time</th><th className="n">Block/log</th><th className="n">Amount</th><th>Counterparty</th><th>Tx</th></tr></thead>
         <tbody>

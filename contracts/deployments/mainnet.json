@@ -1,0 +1,19 @@
+{
+  "network": "QIE mainnet",
+  "chainId": 1990,
+  "address": "0x1E9FC096bebe1f142AeeD317d0054583E9227804",
+  "deployTx": "0xb5251402c6b971633a510b8a36d47fc86a6a570ab68b2f70e5e65fd083e1bd0a",
+  "deployBlock": 12203114,
+  "deployer": "0x264d758f555793F54B14E02567CD6F6aE004c436",
+  "compiler": {
+    "version": "0.8.20+commit.a1b79de6",
+    "evmVersion": "paris",
+    "optimizer": {
+      "enabled": true,
+      "runs": 200
+    }
+  },
+  "runtimeBytes": 2147,
+  "explorer": "https://mainnet.qie.digital/address/0x1E9FC096bebe1f142AeeD317d0054583E9227804",
+  "deployedAt": "2026-11-27T05:35:44.500Z"
+}

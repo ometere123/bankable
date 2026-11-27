@@ -15,9 +15,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <meta httpEquiv="Content-Security-Policy" content={`default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self' ${RPC_A} ${RPC_B} https://mcp.qie.digital https://mainnet.qie.digital; worker-src 'self' blob:; object-src 'none'; base-uri 'none'; form-action 'none'`} />
       </head>
       <body>
-        <main>
-          <nav><a href="/">Bankable</a><a href="/request">Create request</a><a href="/new">Issue</a><a href="/verify">Verify</a></nav>
+        <a className="skip" href="#content">Skip to content</a>
+        <main id="content">
+          <header className="top">
+            <a className="brand" href="/">BANKABLE</a>
+            <nav aria-label="Primary"><a href="/request">Create request</a><a href="/new">Issue</a><a href="/verify">Verify</a></nav>
+          </header>
           {children}
+          <footer className="foot">Evidence derived from public chain data. Not a certified bank statement. QIE mainnet (chain 1990), QUSDC only.</footer>
         </main>
       </body>
     </html>

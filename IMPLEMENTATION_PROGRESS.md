@@ -16,7 +16,7 @@ Last updated: 2026-11-27, end of Phase 1.
 | G3 Mainnet and wallet | **PARTIAL**. Real-EVM execution verified without funds. **Funded deployment, a real QIE Wallet, and explorer source verification of the registry are not done** (blocked on the project owner) |
 | Tier 1 (request, issue, verify, registry, adversarial suite) | Implemented. Acceptance suite passes on a fixture chain, in real browsers, and on a local real-EVM chain. **Not yet run on mainnet** |
 | Tier 2 (CSV, CLI, QIE ID, explorer status, metadata locator) | Implemented and tested; live QIE ID and explorer paths verified against the real services |
-| Registry deployed on mainnet | **No** |
+| Registry deployed on mainnet | **Yes** (address in section 10). Live mainnet acceptance still pending: it needs a completed UTC day and the final domain |
 
 ## 2. Repository layout and toolchain
 
@@ -143,7 +143,6 @@ Real QIE Wallet behaviour, real gas estimation by that wallet, and mainnet regis
 1. **Decide the stable hosting domain** (`BANKABLE_ORIGIN`). It is inside the renderer profile, so changing it changes `rendererId`. The placeholder `https://bankable.invalid` is used now; regenerate the profile and every fixture after the decision.
 2. **Fund a deployer and deploy** (`cd contracts && DEPLOYER_PRIVATE_KEY=... pnpm deploy:mainnet`; the key stays in your shell). Cost is far below 0.001 QIE. Then set `NEXT_PUBLIC_REGISTRY_ADDRESS`, rebuild, run `scripts/mainnet-acceptance.mts` (needs a wallet with real QUSDC history and an optional second funded key for the forged/unauthorised cases) and commit the transcript.
 3. Submit the registry source to the explorer (`pnpm export:verify-input`) and confirm the status line on `/verify` reads "verified".
-4. Spec decisions 1, 3, 4: capacity, the label "Verified document, request not checked", prize currency and AI-assistance rule confirmation.
 5. Non-blocking: one genuine finance recipient (not done).
 
 **Known limits and risks**
@@ -172,6 +171,6 @@ In this sandbox only: Node's `fetch` needs `NODE_USE_ENV_PROXY=1`; Hardhat canno
 | Item | Value |
 |---|---|
 | QUSDC (QIE mainnet, chain 1990) | `0x3F43DA82eC9A4f5285F10FaF1F26EcA7319E5DA5` (read-only) |
-| StatementRegistry | **not deployed** |
+| StatementRegistry (QIE mainnet) | `0x1E9FC096bebe1f142AeeD317d0054583E9227804`, deployed at block 12203114, tx `0xb5251402c6b971633a510b8a36d47fc86a6a570ab68b2f70e5e65fd083e1bd0a`; on-chain bytecode verified byte-identical to the local build (see `contracts/deployments/mainnet.json`) |
 | Local build | solc 0.8.20+commit.a1b79de6, evm paris, optimizer 200 runs, runtime 2,147 bytes, runtime keccak256 `0x86877a3f2bfcf34e32cebea9cef8ec201c15a3e8a0dfcc5377d25ded89414183` |
 | Local fixture registry (NOT a real network) | `0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6` on a throwaway local chain-1990 node |

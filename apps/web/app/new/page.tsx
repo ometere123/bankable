@@ -83,6 +83,12 @@ export default function NewPage() {
   return (
     <>
       <h1>Issue a statement</h1>
+      <ol className="steps" aria-label="Progress">
+        {[["Link", !!req], ["Connect", !!account && accountMatches && chainOk], ["Scan", !!issuance], ["Register", phase === "confirming" || phase === "done"], ["Download", phase === "done"]].map(([label, done], i, arr) => {
+          const firstOpen = arr.findIndex((x) => !x[1]);
+          return <li key={String(label)} className={done ? "done" : i === firstOpen ? "on" : ""} aria-current={i === firstOpen ? "step" : undefined}>{String(label)}{done ? " ✓" : ""}</li>;
+        })}
+      </ol>
       {linkErr && <p className="err" role="alert">Request link problem: {linkErr}. Ask the recipient for the original link.</p>}
       {req && (
         <div className="box">
@@ -97,7 +103,7 @@ export default function NewPage() {
       {account && !accountMatches && req && <p className="err" role="alert">This wallet account is not the expected wallet. Switch to {req.expectedWallet} in QIE Wallet.</p>}
       {account && !chainOk && <p className="err">The wallet is not on QIE mainnet (1990). <button onClick={connect}>Switch network</button></p>}
       {accountMatches && chainOk && phase === "idle" && <button onClick={scan}>Scan period and preview ledger</button>}
-      {phase === "scanning" && <div><p>Reading both endpoints… {progress[1] ? `${progress[0]}/${progress[1]} log queries` : "deriving block range"}</p><progress value={progress[0]} max={progress[1] || 1} /></div>}
+      {phase === "scanning" && <div aria-live="polite"><p>Reading both endpoints… {progress[1] ? `${progress[0]}/${progress[1]} log queries` : "deriving block range"}</p><progress value={progress[0]} max={progress[1] || 1} /></div>}
       {msg && <p className="muted">{msg}</p>}
       {err && <p className="err" role="alert">{err}</p>}
 

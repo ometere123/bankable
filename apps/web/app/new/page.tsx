@@ -1,11 +1,12 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { confirmRegistration, parseRequestLink, prepareIssuance, registryInterface, type Issuance, type TypedRequest, QIE_MAINNET_CHAIN_ID } from "@bankable/core";
-import { currentProfile, makeDual } from "../../lib/chain";
+import { makeDual } from "../../lib/dual";
 import { REGISTRY, registryConfigured, explorerTx } from "../../lib/config";
 import { discoverQieWallet, ensureQieChain, requestAccount, sendRegister, walletChainId, type Discovered } from "../../lib/wallet";
 import { Entries, Summary } from "../../components/LedgerView";
 import { NonClaims } from "../../components/NonClaims";
+import { CopyButton, HashRow, Plate } from "../../components/ui";
 import { utc } from "../../lib/format";
 
 type Phase = "idle" | "scanning" | "preview" | "registering" | "confirming" | "done";
@@ -45,6 +46,7 @@ export default function NewPage() {
   async function scan() {
     if (!req) return; const my = ++gen.current; setErr(""); setMsg(""); setPhase("scanning"); setProgress([0, 0]);
     try {
+      const { currentProfile } = await import("../../lib/chain"); // the PDF renderer loads only when a scan starts
       const i = await prepareIssuance({ dual: makeDual(), request: req, registry: REGISTRY, profile: currentProfile, scan: { concurrency: 6, onProgress: (d, t) => my === gen.current && setProgress([d, t]) } });
       if (my !== gen.current) return; // state changed while scanning
       frozen.current = i.pdf; setIssuance(i); setPhase("preview");
@@ -80,53 +82,80 @@ export default function NewPage() {
   }
 
   if (!registryConfigured) return <><h1>Issue a statement</h1><p className="err">This deployment has no registry address configured.</p></>;
+  const stepsDone: [string, boolean][] = [["Link", !!req], ["Connect", !!account && accountMatches && chainOk], ["Scan", !!issuance], ["Register", phase === "confirming" || phase === "done"], ["Download", phase === "done"]];
+  const firstOpen = stepsDone.findIndex((x) => !x[1]);
   return (
     <>
-      <h1>Issue a statement</h1>
+      <div className="page-head">
+        <div className="eyebrow">02 · Wallet controller</div>
+        <h1>Issue a <em>statement</em></h1>
+        <p className="lede">Review exactly what will be published, register it once, and download the very bytes you registered.</p>
+      </div>
       <ol className="steps" aria-label="Progress">
-        {[["Link", !!req], ["Connect", !!account && accountMatches && chainOk], ["Scan", !!issuance], ["Register", phase === "confirming" || phase === "done"], ["Download", phase === "done"]].map(([label, done], i, arr) => {
-          const firstOpen = arr.findIndex((x) => !x[1]);
-          return <li key={String(label)} className={done ? "done" : i === firstOpen ? "on" : ""} aria-current={i === firstOpen ? "step" : undefined}>{String(label)}{done ? " ✓" : ""}</li>;
-        })}
+        {stepsDone.map(([label, done], i) => (
+          <li key={label} className={done ? "done" : i === firstOpen ? "on" : ""} aria-current={i === firstOpen ? "step" : undefined}>{label}{done ? " ✓" : ""}</li>
+        ))}
       </ol>
-      {linkErr && <p className="err" role="alert">Request link problem: {linkErr}. Ask the recipient for the original link.</p>}
+
+      {!req && !linkErr && <Plate folio="Waiting" title="No request link"><p>Open the private link the recipient sent you. It carries the wallet, the period and a secret that stays in your browser.</p><p className="muted">Have no link? <a href="/request">Create a request</a> (a self-request is possible but is not evidence of third-party involvement).</p></Plate>}
+      {linkErr && <div className="callout warn" role="alert"><h3>This link can’t be used</h3><p>{`Request link problem: ${linkErr}. Ask the recipient for the original link.`}</p></div>}
+
       {req && (
-        <div className="box">
-          <strong>Request</strong>
-          <div className="mono">wallet {req.expectedWallet}<br />period {utc(req.startUnix)} to {utc(req.endUnix)} (end exclusive)<br />token QUSDC {req.token}<br />registry {req.registry}</div>
-        </div>
+        <Plate folio="The request" title="What was asked for" aside={<>UTC period<br />end exclusive</>}>
+          <div className="tablewrap"><table className="facts"><tbody>
+            <tr><th>Wallet</th><td className="mono">{req.expectedWallet}</td></tr>
+            <tr><th>Period</th><td>{utc(req.startUnix)} to {utc(req.endUnix)}</td></tr>
+            <tr><th>Token</th><td className="mono">QUSDC {req.token}</td></tr>
+            <tr><th>Registry</th><td className="mono">{req.registry}</td></tr>
+          </tbody></table></div>
+        </Plate>
       )}
-      {req && wallet === undefined && <p className="muted">Looking for QIE Wallet…</p>}
-      {req && wallet === null && <p className="err">QIE Wallet was not found. Install or unlock it, then reload this page.</p>}
-      {req && wallet && !account && <button onClick={connect}>Connect {wallet.info.name}</button>}
-      {account && <p className="mono">Connected: {account}</p>}
-      {account && !accountMatches && req && <p className="err" role="alert">This wallet account is not the expected wallet. Switch to {req.expectedWallet} in QIE Wallet.</p>}
-      {account && !chainOk && <p className="err">The wallet is not on QIE mainnet (1990). <button onClick={connect}>Switch network</button></p>}
-      {accountMatches && chainOk && phase === "idle" && <button onClick={scan}>Scan period and preview ledger</button>}
-      {phase === "scanning" && <div aria-live="polite"><p>Reading both endpoints… {progress[1] ? `${progress[0]}/${progress[1]} log queries` : "deriving block range"}</p><progress value={progress[0]} max={progress[1] || 1} /></div>}
-      {msg && <p className="muted">{msg}</p>}
-      {err && <p className="err" role="alert">{err}</p>}
+
+      {req && wallet === undefined && <p className="muted" role="status">Looking for QIE Wallet…</p>}
+      {req && wallet === null && <div className="callout warn" role="alert"><h3>QIE Wallet not found</h3><p>Install or unlock QIE Wallet, then reload this page. Nothing is sent until you approve a transaction in the wallet.</p></div>}
+      {req && wallet && !account && <div className="actions"><button className="primary" onClick={connect}>Connect {wallet.info.name}</button></div>}
+      {account && <p className="mono muted">Connected: {account}</p>}
+      {account && !accountMatches && req && <div className="callout warn" role="alert"><h3>Wrong account</h3><p>This wallet account is not the expected wallet. Switch to <span className="mono">{req.expectedWallet}</span> in QIE Wallet.</p></div>}
+      {account && !chainOk && <div className="callout warn"><h3>Wrong network</h3><p>The wallet is not on QIE mainnet (1990).</p><button onClick={connect}>Switch network</button></div>}
+      {accountMatches && chainOk && phase === "idle" && <div className="actions"><button className="primary" onClick={scan}>Scan period and preview ledger</button></div>}
+
+      {phase === "scanning" && (
+        <Plate folio="In progress" title="Reading both endpoints">
+          <div aria-live="polite"><p className="progress-line">{progress[1] ? `${progress[0]}/${progress[1]} log queries` : "deriving block range"}</p><progress value={progress[0]} max={progress[1] || 1} aria-label="Scan progress" /></div>
+          <p className="muted" style={{ fontSize: 13 }}>Both endpoints are queried independently and compared before anything is shown. A month takes about two minutes.</p>
+        </Plate>
+      )}
+      {msg && <p className="muted" role="status">{msg}</p>}
+      {err && <div className="callout warn" role="alert"><h3>Something stopped this</h3><p className="err">{err}</p></div>}
 
       {issuance && (phase === "preview" || phase === "registering" || phase === "confirming" || phase === "done") && (
         <>
           <h2>Preview</h2>
-          <Summary d={issuance.data} /><Entries d={issuance.data} />
-          <p className="mono muted">Confirmed reference block {String(issuance.reference.number)} ({utc(issuance.reference.timestamp)}). File hash (SHA-256) {issuance.pdfHash}</p>
+          <Plate folio="Statement preview" title="This is what the PDF will contain" aside={<>{utc(issuance.data.startUnix)}<br />to {utc(issuance.data.endUnix)}</>}>
+            <Summary d={issuance.data} /><Entries d={issuance.data} />
+          </Plate>
+          <p className="mono muted">Confirmed reference block {String(issuance.reference.number)} ({utc(issuance.reference.timestamp)}). File hash (SHA-256) {issuance.pdfHash} <CopyButton value={issuance.pdfHash} label="file hash" /></p>
           {phase === "preview" && (
-            <div className="box">
-              <strong>Before you register</strong>
-              <p style={{ fontSize: 14 }}>Registering publishes on QIE mainnet: your address, the period, the block range, the commitments, the issuance salt and the renderer profile, and the registration and any revocation block. It does <em>not</em> publish balances, the document, the recipient's identity or the secret nonce. Public records reveal that this address was reported on for this period. Revocation withdraws an attestation; it does not make past transfers untrue.</p>
-              <label style={{ fontWeight: "normal" }}><input type="checkbox" checked={ack} onChange={(e) => setAck(e.target.checked)} /> I understand and approve one registration transaction for this exact file.</label>
-              <button disabled={!ack} onClick={register}>Register on QIE mainnet</button>
+            <div className="callout">
+              <h3>Before you register</h3>
+              <p style={{ fontSize: 14.5 }}>Registering publishes on QIE mainnet: your address, the period, the block range, the commitments, the issuance salt and the renderer profile, and the registration and any revocation block. It does <em>not</em> publish balances, the document, the recipient's identity or the secret nonce. Public records reveal that this address was reported on for this period. Revocation withdraws an attestation; it does not make past transfers untrue.</p>
+              <label style={{ fontWeight: "normal", textTransform: "none", letterSpacing: 0, fontSize: 15, color: "var(--ink)", display: "flex", gap: 10, alignItems: "flex-start" }}><input type="checkbox" checked={ack} onChange={(e) => setAck(e.target.checked)} style={{ marginTop: 4 }} /> <span>I understand and approve one registration transaction for this exact file.</span></label>
+              <div className="actions"><button className="primary" disabled={!ack} onClick={register}>Register on QIE mainnet</button></div>
             </div>
           )}
+          {(phase === "registering" || phase === "confirming") && <p className="muted" role="status">{phase === "registering" ? "Confirm the transaction in your wallet…" : "Registered. Waiting for confirmation on both endpoints before the file is released."}</p>}
           {tx && <p className="mono">Transaction <a href={explorerTx(tx)}>{tx}</a></p>}
           {phase === "done" && (
-            <div className="box">
+            <div className="callout done" role="status">
+              <h3>Registered and read back</h3>
               <p className="okmsg">Registered and read back. The download is released.</p>
-              <p className="mono">Record id {recordId}</p>
-              <button onClick={download}>Download the exact file</button>
-              <p className="muted" style={{ fontSize: 13 }}>These are the very bytes that were registered. Do not re-save or print-to-PDF: any change breaks verification. Send the file to the recipient, who should verify it on the Verify page with their original request link.</p>
+              <HashRow label="Record id" value={recordId} />
+              <div className="actions"><button className="primary" onClick={download}>Download the exact file</button></div>
+              <ol>
+                <li>Send the PDF to the recipient. These are the very bytes that were registered: do not re-save or print-to-PDF, because any change breaks verification.</li>
+                <li>They verify it on the Verify page with their original request link.</li>
+                <li>If you ever need to withdraw it, open the file on the Verify page and revoke the record from this wallet.</li>
+              </ol>
             </div>
           )}
         </>

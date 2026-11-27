@@ -27,8 +27,12 @@ export default function Home() {
         <div className="card"><span className="n">02 · Wallet controller</span><h3>Issue</h3><p>Open the link, connect QIE Wallet, review the reconciled ledger, register once, download the exact file.</p><a className="go" href="/new">Open an issue link →</a></div>
         <div className="card"><span className="n">03 · Anyone</span><h3>Verify</h3><p>Drop the file, name the owner, optionally add your request link. Four checks, one verdict, no wallet needed.</p><a className="go" href="/verify">Verify a file →</a></div>
       </div>
-      <h2>Scope and <em>limits</em></h2>
-      <p style={{ fontSize: 14 }}>One QIE address, one QUSDC token, one completed UTC interval of at most 31 days and 2,000 transfers. No custody, no bank account, no credit scoring, no income classification, no fiat valuation, no KYC.</p>
+      <h2>Built to be <em>checked</em>, not believed</h2>
+      <div className="cards">
+        <div className="card"><span className="n">Reproducible</span><h3>The bytes are recomputed</h3><p>The verifier rebuilds the ledger from chain data and compares your file byte for byte. A forged or edited PDF cannot match.</p><a className="go" href="/how-it-works">How it works →</a></div>
+        <div className="card"><span className="n">Authorised</span><h3>The wallet consents once</h3><p>Registration is the owner’s own transaction, with a block timestamp, and it can be revoked. Requests are bound to a wallet, a period and a secret.</p><a className="go" href="/security">Security &amp; privacy →</a></div>
+        <div className="card"><span className="n">Honest</span><h3>Narrow, with stated limits</h3><p>One address, one token, one completed period. Every result states what it does not prove, and unresolved evidence is never shown as a pass.</p><a className="go" href="/limits">Scope &amp; limits →</a></div>
+      </div>
       <NonClaims />
     </>
   );

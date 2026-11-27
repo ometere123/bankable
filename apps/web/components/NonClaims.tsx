@@ -1,7 +1,7 @@
 /** Fixed on every result (spec 12): what a positive result does not prove. */
 export function NonClaims() {
   return (
-    <div className="box" role="note" aria-label="What this does not prove">
+    <div className="box notice" role="note" aria-label="What this does not prove">
       <strong>What this does not prove.</strong>
       <p style={{ margin: "6px 0 0", fontSize: 14 }}>
         Not a bank statement and not a certified record. A positive result does not prove cryptographic completeness of the RPC history,

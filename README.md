@@ -13,7 +13,7 @@ including what has **not** been done (mainnet deployment and live mainnet accept
 |---|---|
 | `packages/core` | Shared TypeScript core: typed request, canonical statement, ledger, deterministic PDF renderer, verdict machine, dual-endpoint RPC adapter, verify and issue pipelines, Tier 2 CSV/locator/QIE ID/explorer helpers |
 | `contracts` | `StatementRegistry.sol` (Solidity 0.8.20, `paris`), tests, deploy tooling |
-| `apps/web` | Static-export Next.js app: `/`, `/request`, `/new`, `/verify`. Browser talks to the two QIE RPCs directly (no server) |
+| `apps/web` | Static-export Next.js site: `/`, `/how-it-works`, `/security`, `/limits`, `/developers`, and the journeys `/request`, `/new`, `/verify`. The browser talks to the two QIE RPCs directly (no server) |
 | `packages/cli` | Independent Node verifier `bankable-verify` (Tier 2) |
 | `scripts` | Gate probes, local chain-1990 fixture, live acceptance runner |
 | `docs/gates`, `docs/acceptance` | Recorded evidence |

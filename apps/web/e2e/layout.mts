@@ -11,7 +11,7 @@ const BASE = `http://localhost:${(server.address() as any).port}`;
 const b = await pw.chromium.launch(); let bad = 0;
 for (const [w, h] of [[390, 844], [768, 1024], [1280, 800]]) for (const scheme of ["light", "dark"]) {
   const ctx = await b.newContext({ viewport: { width: w, height: h }, colorScheme: scheme, deviceScaleFactor: 1 }); const page = await ctx.newPage();
-  for (const route of ["/", "/request", "/new", "/verify"]) {
+  for (const route of ["/", "/how-it-works", "/security", "/limits", "/developers", "/request", "/new", "/verify"]) {
     await page.goto(BASE + route); await page.waitForTimeout(300);
     const m = await page.evaluate(() => ({ sw: document.documentElement.scrollWidth, iw: window.innerWidth }));
     const ok = m.sw <= m.iw; if (!ok) bad++; console.log(`${ok ? "OK  " : "FAIL"} ${w}px ${scheme.padEnd(5)} ${route.padEnd(9)} scrollWidth ${m.sw} / ${m.iw}`);

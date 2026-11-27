@@ -6,6 +6,9 @@ import "@fontsource/inter/latin-500.css";
 import "@fontsource/inter/latin-600.css";
 import "./globals.css";
 import { RPC_A, RPC_B } from "../lib/config";
+import { Mark } from "../components/ui";
+import { SiteNav } from "../components/SiteNav";
+import { SiteFooter } from "../components/SiteFooter";
 
 export const metadata: Metadata = {
   title: "Bankable: verifiable QUSDC statements on QIE",
@@ -23,11 +26,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <a className="skip" href="#content">Skip to content</a>
         <main id="content">
           <header className="top">
-            <a className="brand" href="/">Bankable</a>
-            <nav aria-label="Primary"><a href="/request">Create request<sup>01</sup></a><a href="/new">Issue<sup>02</sup></a><a href="/verify">Verify<sup>03</sup></a></nav>
+            <a className="brand" href="/" aria-label="Bankable, home"><Mark />Bankable</a>
+            <div className="headright"><span className="chip"><i aria-hidden="true" />QIE mainnet · chain 1990</span><SiteNav /></div>
           </header>
           {children}
-          <footer className="foot"><span>Evidence derived from public chain data. Not a certified bank statement.</span><span>QIE mainnet · chain 1990 · QUSDC only</span></footer>
+          <SiteFooter />
         </main>
       </body>
     </html>

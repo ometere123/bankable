@@ -1,0 +1,88 @@
+{
+  "gate": "G2",
+  "date": "2026-11-27T02:21:16.133Z",
+  "repeatsPerCell": 5,
+  "browserVersions": {
+    "chromium": "158.0.8127.36",
+    "firefox": "155.0"
+  },
+  "node": "v22.23.5",
+  "pass": true,
+  "table": [
+    {
+      "fixture": "no-activity",
+      "runs": 35,
+      "distinctHashes": 1,
+      "sha256": "375b99bbef30ec3cab98a117bd3c876e34993f035677ccdf2d2da848ff8f2b97",
+      "perEngine": {
+        "node": "375b99bbef30ec3c",
+        "chromium [default]": "375b99bbef30ec3c",
+        "chromium [tr-TR/Pacific-Kiritimati]": "375b99bbef30ec3c",
+        "chromium [ar-EG/America-Los_Angeles]": "375b99bbef30ec3c",
+        "firefox [default]": "375b99bbef30ec3c",
+        "firefox [tr-TR/Pacific-Kiritimati]": "375b99bbef30ec3c",
+        "firefox [ar-EG/America-Los_Angeles]": "375b99bbef30ec3c"
+      }
+    },
+    {
+      "fixture": "single-entry",
+      "runs": 35,
+      "distinctHashes": 1,
+      "sha256": "34ae8815452b4d1667abfcc8724dbe21bcd699d96685bdeed4405cf9e5f49576",
+      "perEngine": {
+        "node": "34ae8815452b4d16",
+        "chromium [default]": "34ae8815452b4d16",
+        "chromium [tr-TR/Pacific-Kiritimati]": "34ae8815452b4d16",
+        "chromium [ar-EG/America-Los_Angeles]": "34ae8815452b4d16",
+        "firefox [default]": "34ae8815452b4d16",
+        "firefox [tr-TR/Pacific-Kiritimati]": "34ae8815452b4d16",
+        "firefox [ar-EG/America-Los_Angeles]": "34ae8815452b4d16"
+      }
+    },
+    {
+      "fixture": "multi-page-120",
+      "runs": 35,
+      "distinctHashes": 1,
+      "sha256": "482eeed046dbf91b642865256df09f91cdcf5a8d61f422387825bea82d85c190",
+      "perEngine": {
+        "node": "482eeed046dbf91b",
+        "chromium [default]": "482eeed046dbf91b",
+        "chromium [tr-TR/Pacific-Kiritimati]": "482eeed046dbf91b",
+        "chromium [ar-EG/America-Los_Angeles]": "482eeed046dbf91b",
+        "firefox [default]": "482eeed046dbf91b",
+        "firefox [tr-TR/Pacific-Kiritimati]": "482eeed046dbf91b",
+        "firefox [ar-EG/America-Los_Angeles]": "482eeed046dbf91b"
+      }
+    },
+    {
+      "fixture": "multi-page-600",
+      "runs": 35,
+      "distinctHashes": 1,
+      "sha256": "08e085679cac7b66e2ffd4ecd305275e6e750ea93a970b52c9134bd7dd1b850f",
+      "perEngine": {
+        "node": "08e085679cac7b66",
+        "chromium [default]": "08e085679cac7b66",
+        "chromium [tr-TR/Pacific-Kiritimati]": "08e085679cac7b66",
+        "chromium [ar-EG/America-Los_Angeles]": "08e085679cac7b66",
+        "firefox [default]": "08e085679cac7b66",
+        "firefox [tr-TR/Pacific-Kiritimati]": "08e085679cac7b66",
+        "firefox [ar-EG/America-Los_Angeles]": "08e085679cac7b66"
+      }
+    },
+    {
+      "fixture": "exact-page-boundary",
+      "runs": 35,
+      "distinctHashes": 1,
+      "sha256": "c6cc6c770d18e44857bc6c20ffcd1a41eec19b55a26cb43341ca9deb470eda9a",
+      "perEngine": {
+        "node": "c6cc6c770d18e448",
+        "chromium [default]": "c6cc6c770d18e448",
+        "chromium [tr-TR/Pacific-Kiritimati]": "c6cc6c770d18e448",
+        "chromium [ar-EG/America-Los_Angeles]": "c6cc6c770d18e448",
+        "firefox [default]": "c6cc6c770d18e448",
+        "firefox [tr-TR/Pacific-Kiritimati]": "c6cc6c770d18e448",
+        "firefox [ar-EG/America-Los_Angeles]": "c6cc6c770d18e448"
+      }
+    }
+  ]
+}

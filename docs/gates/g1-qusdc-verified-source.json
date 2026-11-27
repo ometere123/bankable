@@ -1,0 +1,48 @@
+{
+  "source": "https://mainnet.qie.digital/api/v2/smart-contracts/0x3F43DA82eC9A4f5285F10FaF1F26EcA7319E5DA5 (Blockscout v7.0.2)",
+  "fetchedAt": "2026-11-27",
+  "name": "QUSDC",
+  "compilerVersion": "v0.8.20+commit.a1b79de6",
+  "evmVersion": "berlin",
+  "optimizationEnabled": false,
+  "isVerified": true,
+  "isFullyVerified": false,
+  "proxyType": null,
+  "implementations": [],
+  "verifiedAt": "2026-01-21T12:11:49.149691Z",
+  "contractDeclaration": "contract QUSDC is ERC20, AccessControl",
+  "functions": [
+    "DEFAULT_ADMIN_ROLE",
+    "VAULT_ROLE",
+    "allowance",
+    "approve",
+    "balanceOf",
+    "burn",
+    "decimals",
+    "getRoleAdmin",
+    "grantRole",
+    "hasRole",
+    "mint",
+    "name",
+    "renounceRole",
+    "revokeRole",
+    "supportsInterface",
+    "symbol",
+    "totalSupply",
+    "transfer",
+    "transferFrom"
+  ],
+  "events": [
+    "Approval",
+    "RoleAdminChanged",
+    "RoleGranted",
+    "RoleRevoked",
+    "Transfer"
+  ],
+  "findings": [
+    "mint(address to, uint256 amount) and burn(address from, uint256 amount) are onlyRole(VAULT_ROLE)",
+    "burn takes an arbitrary `from`: a VAULT_ROLE holder can burn from any holder, shown in statements as an outgoing transfer to the zero address",
+    "No proxy/upgradeable/pausable/blacklist code in the verified source; explorer reports proxy_type null and no implementations",
+    "Standard OpenZeppelin Transfer events: mint is Transfer(0x0 -> to), burn is Transfer(from -> 0x0)"
+  ]
+}

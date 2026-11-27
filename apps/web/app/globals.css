@@ -1,0 +1,24 @@
+:root { --paper:#faf8f3; --ink:#17171a; --muted:#5d5d63; --rule:#d9d4c7; --accent:#1a3f80; --ok:#1c6b3a; --bad:#a1281f; --warn:#8a5a00; --mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; }
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.5 Georgia, "Times New Roman", serif; }
+main { max-width: 860px; margin: 0 auto; padding: 24px 16px 64px; }
+h1 { font-size: 28px; margin: 8px 0 4px; } h2 { font-size: 20px; margin: 28px 0 8px; border-bottom: 1px solid var(--rule); padding-bottom: 4px; }
+nav { display:flex; gap:16px; flex-wrap:wrap; border-bottom:1px solid var(--rule); padding-bottom:8px; font-family: var(--mono); font-size: 13px; }
+a { color: var(--accent); }
+.mono, code { font-family: var(--mono); font-size: 13px; word-break: break-all; }
+.muted { color: var(--muted); }
+label { display:block; margin-top:12px; font-weight:bold; font-size:14px; }
+input[type=text], input[type=date], textarea { width:100%; font: 14px var(--mono); padding:8px; border:1px solid var(--ink); background:#fff; }
+button { font: 14px var(--mono); padding:8px 14px; border:1px solid var(--ink); background:var(--ink); color:var(--paper); cursor:pointer; margin: 8px 8px 0 0; }
+button.secondary { background: transparent; color: var(--ink); }
+button:disabled { opacity:.4; cursor:not-allowed; }
+.box { border:1px solid var(--ink); padding:12px 14px; margin:16px 0; background:#fff; }
+.row { display:grid; grid-template-columns: 110px 90px 1fr; gap:8px; padding:8px 0; border-bottom:1px solid var(--rule); align-items:start; }
+.pass { color: var(--ok); font-weight:bold } .fail { color: var(--bad); font-weight:bold } .inconclusive { color: var(--warn); font-weight:bold } .not-checked { color: var(--muted); font-weight:bold }
+.verdict { font-size: 22px; font-weight:bold; border:2px solid var(--ink); padding:10px 14px; margin: 12px 0; background:#fff; }
+.verdict .tag { font-family: var(--mono); font-size: 12px; display:block; color: var(--muted); font-weight: normal }
+.drop { border:2px dashed var(--ink); padding:24px; text-align:center; background:#fff; margin:8px 0; }
+.drop.over { background:#eef2fb; }
+table { border-collapse: collapse; width:100%; font-size:13px; } th,td { text-align:left; border-bottom:1px solid var(--rule); padding:4px 6px; vertical-align: top; } td.n, th.n { text-align:right; font-family: var(--mono); }
+.err { color: var(--bad); font-weight: bold; } .okmsg { color: var(--ok); font-weight: bold; }
+progress { width:100%; }

@@ -1,0 +1,13 @@
+https://rpc1mainnet.qie.digital 1 { wallMs: 61025, ok: 48, errs: [], p50: 1398 }
+https://rpc1mainnet.qie.digital 4 { wallMs: 34879, ok: 48, errs: [], p50: 3244 }
+https://rpc1mainnet.qie.digital 8 { wallMs: 29916, ok: 48, errs: [], p50: 4932 }
+https://rpc1mainnet.qie.digital 16 { wallMs: 33436, ok: 48, errs: [], p50: 10492 }
+https://rpc1mainnet.qie.digital 32 {
+  wallMs: 32736,
+  ok: 23,
+  errs: [ 'AbortError: This operation was aborted' ],
+  p50: 20003
+}
+https://rpc5mainnet.qie.digital 1 { wallMs: 53288, ok: 48, errs: [], p50: 831 }
+https://rpc5mainnet.qie.digital 4 { wallMs: 43593, ok: 48, errs: [], p50: 4116 }
+https://rpc5mainnet.qie.digital 8 { wallMs: 44189, ok: 48, errs: [], p50: 7996 }

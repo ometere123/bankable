@@ -1,0 +1,27 @@
+{
+  "name": "@bankable/web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "typecheck": "tsc --noEmit",
+    "lint": "tsc --noEmit",
+    "test": "echo 'web: see e2e/ (pnpm --filter @bankable/web e2e)'",
+    "e2e": "tsx e2e/run.mts"
+  },
+  "dependencies": {
+    "@bankable/core": "workspace:*",
+    "next": "16.4.6",
+    "react": "19.1.10",
+    "react-dom": "19.1.10"
+  },
+  "devDependencies": {
+    "@types/node": "22.20.7",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "ethers": "6.17.0",
+    "tsx": "4.23.15",
+    "typescript": "5.9.3"
+  }
+}

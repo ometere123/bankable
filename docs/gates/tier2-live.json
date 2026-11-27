@@ -1,0 +1,40 @@
+{
+  "date": "2026-11-27T02:54:47.489Z",
+  "qieId": {
+    "qusdcContract": {
+      "status": "ok",
+      "name": null,
+      "reason": "No QIE ID is set for this address on mainnet."
+    },
+    "zeroAddress": {
+      "status": "ok",
+      "name": null,
+      "reason": "No QIE ID is set for this address on mainnet."
+    }
+  },
+  "explorer": {
+    "qusdc": {
+      "status": "verified",
+      "fullyVerified": false,
+      "compiler": "v0.8.20+commit.a1b79de6",
+      "name": "QUSDC",
+      "verifiedAt": "2026-01-21T12:11:49.149691Z"
+    },
+    "activeContractWallet": {
+      "status": "not-verified"
+    },
+    "unknownAddress": {
+      "status": "unknown",
+      "reason": "address is not a contract on the explorer"
+    }
+  },
+  "realLedgerCsv": {
+    "wallet": "(public mainnet wallet; address omitted from repo evidence)",
+    "entries": 46,
+    "rows": 46,
+    "incoming": "12139424286",
+    "outgoing": "3070225960",
+    "opening": "0",
+    "closing": "9069198326"
+  }
+}

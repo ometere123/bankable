@@ -1,0 +1,16 @@
+{
+  "name": "@bankable/cli",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "bin": { "bankable-verify": "./src/bin.ts" },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "lint": "tsc --noEmit",
+    "test": "vitest run",
+    "build": "tsc --noEmit",
+    "verify": "tsx src/bin.ts"
+  },
+  "dependencies": { "@bankable/core": "workspace:*" },
+  "devDependencies": { "@types/node": "22.20.7", "tsx": "4.23.15", "typescript": "5.9.3", "vitest": "3.2.4", "ethers": "6.17.0" }
+}

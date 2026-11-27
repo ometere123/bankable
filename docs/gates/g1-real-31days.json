@@ -1,0 +1,27 @@
+{
+  "wallet": "0xf5437c28ee6fb1c8d84686a9825162fe68d62186",
+  "startUnix": "1793059200",
+  "endUnix": "1795737600",
+  "fromBlock": "11465697",
+  "toBlock": "12197540",
+  "entries": 6,
+  "opening": "0.000000",
+  "closing": "0.000000",
+  "incoming": "0.150000",
+  "outgoing": "0.150000",
+  "self": "0.000000",
+  "reconciled": true,
+  "totalSeconds": 139.715,
+  "rpc": {
+    "a": {
+      "calls": 203,
+      "retries": 0,
+      "failures": 0
+    },
+    "b": {
+      "calls": 203,
+      "retries": 0,
+      "failures": 0
+    }
+  }
+}

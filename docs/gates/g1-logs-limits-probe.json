@@ -1,0 +1,74 @@
+{
+  "head": 12199402,
+  "blockTimeSec": {
+    "last1k": 3.613065326633166,
+    "last100k": 3.616900845042252,
+    "last1M": 3.653080265401327
+  },
+  "deploymentBlock": 5244996,
+  "deploymentBlockHeader": "0x6970c268",
+  "logLimits": {
+    "https://rpc1mainnet.qie.digital": [
+      {
+        "span": 1000,
+        "ms": 359,
+        "n": 0
+      },
+      {
+        "span": 10000,
+        "ms": 1072,
+        "n": 5
+      },
+      {
+        "span": 50000,
+        "ms": 267,
+        "n": null,
+        "err": "maximum [from, to] blocks distance: 10000"
+      }
+    ],
+    "https://rpc5mainnet.qie.digital": [
+      {
+        "span": 1000,
+        "ms": 462,
+        "n": 0
+      },
+      {
+        "span": 10000,
+        "ms": 1023,
+        "n": 5
+      },
+      {
+        "span": 50000,
+        "ms": 43,
+        "n": null,
+        "err": "maximum [from, to] blocks distance: 10000"
+      }
+    ]
+  },
+  "fullHistory": {
+    "totalMs": 268,
+    "logs": 0,
+    "chunks": [
+      {
+        "from": 5244996,
+        "to": 5744995,
+        "err": "maximum [from, to] blocks distance: 10000"
+      }
+    ]
+  },
+  "logStats": {
+    "topics3": 0,
+    "topics4": 0,
+    "other": 0,
+    "removedTrue": 0,
+    "mints": 0,
+    "burns": 0,
+    "zeroValue": 0,
+    "selfTransfers": 0,
+    "dataLenBad": 0
+  },
+  "topAddrs": [],
+  "firstLogBlock": null,
+  "lastLogBlock": null,
+  "pickedWallet": null
+}

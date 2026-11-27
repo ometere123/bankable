@@ -1,0 +1,33 @@
+{
+  "tool": "LibreOffice headless CSV->XLSX import, read back with openpyxl 3.1.5; NOT Xero or QuickBooks (no import into those was performed or is claimed)",
+  "headers": [
+    "UTC timestamp",
+    "wallet",
+    "token",
+    "transaction hash",
+    "log index",
+    "direction",
+    "amount (QUSDC token units)",
+    "counterparty"
+  ],
+  "real_ledger": {
+    "data_rows": 46,
+    "formula_cells": 0,
+    "amount_cell_types": [
+      "n"
+    ],
+    "sum_in": "12139.424286",
+    "sum_out": "3070.225960",
+    "expected_in": "12139.424286",
+    "expected_out": "3070.225960",
+    "sums_match": true
+  },
+  "injection": {
+    "formula_cells_or_cells_starting_with_formula_char": [],
+    "neutralised_cells_as_imported": [
+      "'=HYPERLINK(\"http://evil.example\",\"click\")",
+      "'@SUM(1+1)*cmd|' /C calc'!A0"
+    ]
+  },
+  "pass": true
+}

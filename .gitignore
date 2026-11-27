@@ -1,0 +1,20 @@
+node_modules/
+.next/
+dist/
+coverage/
+cache/
+artifacts/
+typechain-types/
+.env
+.env.*
+!.env.example
+*.log
+.DS_Store
+# local-only scratch output of gate probes (raw log dumps)
+scripts/gates/out/
+contracts/deployments/standard-json-input.json
+
+# Next static export and build byproducts (E2E builds embed fixture RPC URLs; never commit)
+apps/web/out/
+apps/web/next-env.d.ts
+*.tsbuildinfo

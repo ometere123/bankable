@@ -1,0 +1,45 @@
+{
+  "endpoint": "https://rpc1mainnet.qie.digital",
+  "date": "2026-11-27T02:25:13.011Z",
+  "clientVersion": "Version dev ()\nCompiled at  using Go go1.22.2 (amd64)",
+  "latestBlock": {
+    "number": 12199950,
+    "hasBaseFee": true,
+    "baseFeePerGas": "0x3b9aca00",
+    "gasLimit": 4294967295
+  },
+  "gasPrice": "0x430e2340",
+  "push0": {
+    "control_push1": {
+      "result": "0x"
+    },
+    "push0": {
+      "result": "0x"
+    }
+  },
+  "creationCall": {
+    "returnsRuntimeCode": true,
+    "runtimeBytes": 2147,
+    "localDeployedBytes": 2147
+  },
+  "deploymentGasEstimate": {
+    "result": "0x7e3a0"
+  },
+  "stateOverrideHonoured": false,
+  "harness": {
+    "idIsOwnerScoped": true,
+    "ownerIsMsgSender": true,
+    "registeredBlockIsExecutingBlock": true,
+    "activeAfterRegister": true,
+    "zeroCommitmentReverts": true,
+    "toBlockAtExecutingBlockReverts": true,
+    "futureEndReverts": true,
+    "duplicateReverts": true,
+    "revokeRecordsBlock": true,
+    "recordSurvivesRevocation": true,
+    "doubleRevokeReverts": true,
+    "revokeUnknownReverts": true,
+    "unknownReadsZeroOwner": true
+  },
+  "harnessAllTrue": true
+}

@@ -1,0 +1,31 @@
+{
+  "name": "bankable",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Bankable: owner-authorised, byte-reproducible QUSDC statements on QIE mainnet.",
+  "packageManager": "pnpm@10.33.0",
+  "engines": {
+    "node": ">=22.12"
+  },
+  "scripts": {
+    "gate:g2": "NODE_NO_WARNINGS=1 tsx scripts/gates/g2-render.mts",
+    "gate:g1": "NODE_USE_ENV_PROXY=1 NODE_NO_WARNINGS=1 tsx scripts/gates/g1-real.mts",
+    "build": "pnpm -r build",
+    "typecheck": "pnpm -r typecheck",
+    "lint": "eslint . && pnpm -r lint",
+    "test": "pnpm -r test",
+    "lint:eslint": "eslint ."
+  },
+  "devDependencies": {
+    "@bankable/core": "workspace:*",
+    "@eslint/js": "9.39.5",
+    "@types/node": "22.20.7",
+    "esbuild": "0.28.2",
+    "eslint": "9.39.5",
+    "ethers": "6.17.0",
+    "globals": "17.14.0",
+    "tsx": "4.23.15",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.72.2"
+  }
+}

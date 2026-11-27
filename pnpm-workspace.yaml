@@ -1,0 +1,10 @@
+packages:
+  - packages/*
+  - contracts
+  - apps/*
+onlyBuiltDependencies:
+  - esbuild
+  - sharp
+  - keccak
+  - secp256k1
+  - "@nomicfoundation/solidity-analyzer"

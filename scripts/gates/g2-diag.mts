@@ -1,0 +1,18 @@
+import { build } from "esbuild";
+import { createRequire } from "node:module";
+import fs from "node:fs";
+import { renderStatementPdf } from "../../packages/core/src/render/pdf.ts";
+import { fixtureByName } from "./g2-fixtures.ts";
+const require = createRequire(import.meta.url);
+const pw = require("/opt/node-tools/node_modules/playwright");
+const bundle = await build({ entryPoints: ["scripts/gates/g2-entry.ts"], bundle: true, format: "iife", platform: "browser", write: false });
+const node = Buffer.from(await renderStatementPdf(fixtureByName("multi-page-600"), { origin: "https://bankable.invalid" }));
+const b = await pw.chromium.launch(); const p = await b.newPage(); await p.setContent("<html></html>"); await p.addScriptTag({ content: bundle.outputFiles[0].text });
+const chr = Buffer.from(await p.evaluate(() => (window as any).renderFixture("multi-page-600", "https://bankable.invalid")), "base64");
+await b.close();
+console.log("node", node.length, "chromium", chr.length);
+let i = 0; while (i < Math.min(node.length, chr.length) && node[i] === chr[i]) i++;
+console.log("first diff at byte", i);
+const show = (buf: Buffer) => buf.subarray(Math.max(0, i - 120), i + 120).toString("latin1").replace(/[^\x20-\x7e\n]/g, ".");
+console.log("NODE:\n" + show(node)); console.log("CHROMIUM:\n" + show(chr));
+fs.writeFileSync("/tmp/g2-node.pdf", node); fs.writeFileSync("/tmp/g2-chromium.pdf", chr);

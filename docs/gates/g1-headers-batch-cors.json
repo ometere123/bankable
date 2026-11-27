@@ -1,0 +1,76 @@
+{
+  "https://rpc1mainnet.qie.digital": {
+    "hdr_conc1": {
+      "calls": 64,
+      "wallMs": 20753,
+      "perSec": 3.1,
+      "errs": 0
+    },
+    "hdr_conc8": {
+      "calls": 64,
+      "wallMs": 3055,
+      "perSec": 20.9,
+      "errs": 0
+    },
+    "hdr_conc16": {
+      "calls": 64,
+      "wallMs": 1887,
+      "perSec": 33.9,
+      "errs": 0
+    },
+    "batch50": {
+      "ms": 1803,
+      "status": 200,
+      "isArray": true,
+      "n": 50,
+      "firstOk": true
+    },
+    "corsPreflight": {
+      "status": 204,
+      "allowOrigin": "*",
+      "allowMethods": "POST",
+      "allowHeaders": "content-type"
+    },
+    "corsPost": {
+      "status": 200,
+      "allowOrigin": "*"
+    }
+  },
+  "https://rpc5mainnet.qie.digital": {
+    "hdr_conc1": {
+      "calls": 64,
+      "wallMs": 5548,
+      "perSec": 11.5,
+      "errs": 0
+    },
+    "hdr_conc8": {
+      "calls": 64,
+      "wallMs": 884,
+      "perSec": 72.4,
+      "errs": 0
+    },
+    "hdr_conc16": {
+      "calls": 64,
+      "wallMs": 428,
+      "perSec": 149.5,
+      "errs": 0
+    },
+    "batch50": {
+      "ms": 1077,
+      "status": 200,
+      "isArray": true,
+      "n": 50,
+      "firstOk": true
+    },
+    "corsPreflight": {
+      "status": 204,
+      "allowOrigin": "*",
+      "allowMethods": "POST",
+      "allowHeaders": "content-type"
+    },
+    "corsPost": {
+      "status": 200,
+      "allowOrigin": "*"
+    }
+  }
+}

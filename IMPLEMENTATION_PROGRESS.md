@@ -16,7 +16,7 @@ Last updated: 2026-11-27 (registry deployed, mainnet acceptance 16/16, interface
 | G3 Mainnet and wallet | **PASS except the real QIE Wallet extension**: funded deployment, receipt, read-back, and explorer source verification (full match) are done on mainnet. A real QIE Wallet has not been used; only a mock |
 | Tier 1 (request, issue, verify, registry, adversarial suite) | Implemented. **Live mainnet acceptance 16/16** (`docs/acceptance/mainnet-2026-11-27.json`), plus fixture chain, real browsers and a local real-EVM run |
 | Tier 2 (CSV, CLI, QIE ID, explorer status, metadata locator) | Implemented and tested; live QIE ID and explorer paths verified against the real services |
-| Registry deployed on mainnet | **Yes**, source-verified on the explorer (full match). Public address locked: `https://bankable-qie.vercel.app` (Vercel project created, nothing deployed yet) |
+| Registry deployed on mainnet | **Yes**, source-verified on the explorer (full match). Public address locked: `https://bankable-qie.vercel.app` (deployed to production on Vercel from commit 41bdc45, deployment `dpl_D6KyBabFob5FN3Q5vSxCwxri5FqT`; Vercel Authentication off, so it is public) |
 
 ## 2. Repository layout and toolchain
 
@@ -178,9 +178,9 @@ In this sandbox only: Node's `fetch` needs `NODE_USE_ENV_PROXY=1`; Hardhat canno
 | Local fixture registry (NOT a real network) | `0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6` on a throwaway local chain-1990 node |
 | Explorer | `https://mainnet.qie.digital/address/0x1E9FC096bebe1f142AeeD317d0054583E9227804`: source verified, full match |
 | Renderer profile (current) | `bankable-renderer/1`, origin `https://bankable-qie.vercel.app`, rendererId `0x88501b7ead79174dfa554c54c664a28cb562f6477cc8ad8a0d437f668b9ac532` |
-| Public address | `https://bankable-qie.vercel.app` (Vercel project `bankable`, id `prj_u8B6f7vOGZIm7RYucODjoCF3uU5p`; Vercel Authentication still on; not deployed yet) |
-| Wallet A (owner and deployer; funded by you) | `0x264d758f555793F54B14E02567CD6F6aE004c436`: 0.75 QUSDC left |
-| Wallet B (second wallet) | `0xD2612D30646BafB05fa28B8363e8F2AaDD54e0c4`: 0.25 QUSDC left. Private keys are in a 0600 file outside the repository and are not committed |
+| Public address | `https://bankable-qie.vercel.app` (Vercel project `bankable`, id `prj_u8B6f7vOGZIm7RYucODjoCF3uU5p`; root `apps/web`, `NEXT_PUBLIC_REGISTRY_ADDRESS` set as a build variable; Vercel Authentication off). All eight pages return HTTP 200 anonymously |
+| Wallet A (owner and deployer; funded by you) | `0x264d758f555793F54B14E02567CD6F6aE004c436`: swept (see below) |
+| Wallet B (second wallet) | `0xD2612D30646BafB05fa28B8363e8F2AaDD54e0c4`: swept (see below). Private keys are in a 0600 file outside the repository and are not committed |
 
 ## 11. Interface refinement (design, accessibility, performance)
 
@@ -205,3 +205,11 @@ Scope: frontend only. No change to the core, the contract, the security model or
 **Verified.** ESLint and types clean; core 107, CLI 8, contracts 23; browser suite on Chromium and Firefox: 44 of 44 (Chromium and Firefox: journeys, adversarial cases, Tier 2, interface states, multi-page site); the first full run was 42 of 44, the 2 misses being an ambiguous selector in a new test, fixed and rerun; layout check: 48 of 48 (eight pages at 390, 768 and 1280 px, light and dark, no horizontal scroll); contrast gate: 30 of 30.
 
 **Known limits.** Not tested with the real QIE Wallet extension. The web app is not deployed: the Vercel project exists, Vercel Authentication must be switched off before it is public. The Turbopack build also copies the worker's TypeScript source into the static assets; it is not executed and is harmless. Small copy buttons are 28px high by design (secondary controls). No automated screen-reader pass was run (no assistive technology is available here); the semantics were checked structurally instead.
+
+## 12. Deployment and live verification (2026-11-27)
+
+Deployed to production from the repository (`main`, commit `41bdc45`). **Live end-to-end check on `https://bankable-qie.vercel.app` (`apps/web/e2e/live.mts`), Chromium and Firefox, with no fixtures and no mock wallet:** a statement for the generated wallet was issued and registered on mainnet (`scripts/mainnet-demo-statement.mts`; record `0xac8426294bc649ac11cab3bd2b30af08993e94a8c07f52298e59094e9c3041e9`, tx `0x2d1c60e1eaa8ee2764fc7413b02c0eb6e457e58e5a9862b88a1cfd3454d89683`). In both browsers: the worker pre-filled the owner from the PDF metadata; with the request link the verdict was **Verified, request matched** with all four checks PASS; the explorer status read live as verified (full match); one altered byte gave **Verification failed**; a wrong link failed the Request check; no page errors.
+
+**Funds.** At the owner's instruction all remaining QUSDC (0.75 + 0.25) and QIE were swept from both generated wallets to `0x1d7d7Ee39f730d49E37E718a12E23671A31D280B` (four transactions; about 0.000021 QIE of dust remains in each wallet). The private keys exist only in a temporary file outside the repository.
+
+**Not done.** The real QIE Wallet extension was never used (the issue flow was tested with a mock wallet and with direct signing). The project was paused by its owner here.
